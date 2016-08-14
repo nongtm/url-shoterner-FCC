@@ -32,11 +32,14 @@ MongoClient.connect(url, function(err, db) {
   
   app.get('/:short', function(req,res){
     var param = req.params.short;
-    collection.find({
+    collection.findOne({
       short: +param
-    }).toArray(function(err, document){
+    }, function(err, result){
       if (err) return err;
-      res.redirect(document[document.length-1].long);
+      if(result)
+         res.redirect(result.long);
+      else
+        res.send("This url is not on the database!");
     });
   });
   
